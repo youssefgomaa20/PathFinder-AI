@@ -1,0 +1,36 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    
+    /* CommonJS / ESModule interop */
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@workspace/api-zod": ["src/lib/api"],
+      "@workspace/integrations-openai-ai-server": [
+        "../AI-Web-Builder/lib/integrations/openai_ai_integrations/src/server"
+      ]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "src", "artifacts", "vite.config.ts"],
+  "exclude": ["node_modules"]
+}

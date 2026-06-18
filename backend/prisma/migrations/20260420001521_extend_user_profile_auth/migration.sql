@@ -1,0 +1,17 @@
+-- AlterTable
+ALTER TABLE "public"."User" ADD COLUMN     "address" TEXT,
+ADD COLUMN     "bio" TEXT,
+ADD COLUMN     "birthDate" TIMESTAMP(3),
+ADD COLUMN     "careerGoal" TEXT,
+ADD COLUMN     "cvUrl" TEXT,
+ADD COLUMN     "education" TEXT,
+ADD COLUMN     "experienceLevel" TEXT,
+ADD COLUMN     "github" TEXT,
+ADD COLUMN     "linkedin" TEXT,
+ADD COLUMN     "phone" TEXT,
+ADD COLUMN     "portfolio" TEXT,
+ADD COLUMN     "resetToken" TEXT,
+ADD COLUMN     "resetTokenExpiry" TIMESTAMP(3),
+ADD COLUMN     "skills" TEXT[] DEFAULT ARRAY[]::TEXT[],
+ADD COLUMN     "university" TEXT,
+ALTER COLUMN "password" DROP NOT NULL;

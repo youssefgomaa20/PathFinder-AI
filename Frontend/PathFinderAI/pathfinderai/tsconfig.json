@@ -1,0 +1,52 @@
+{
+  "compilerOptions": {
+    /* Target & Module */
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023", "DOM"],
+
+    /* React */
+    "jsx": "react-jsx",
+
+    /* Interop */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Strictness */
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+
+    /* Modules / JS */
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowJs": true,
+    "verbatimModuleSyntax": true,
+
+    /* Base URL and Paths */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@workspace/api-zod": ["src/lib/api"],
+      "@workspace/integrations-openai-ai-server": [
+        "../AI-Web-Builder/lib/integrations/openai_ai_integrations/src/server"
+      ]
+    }
+  },
+
+  "include": [
+    "src",
+    "artifacts",
+    "vite.config.ts"
+  ],
+
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

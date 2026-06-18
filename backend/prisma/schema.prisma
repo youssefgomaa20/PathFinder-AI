@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  /// Null for Google-only accounts
+  password  String?
+
+  phone            String?
+  address          String?
+  bio              String?
+  birthDate        DateTime?
+  university       String?
+  education        String?
+  experienceLevel  String?
+  level            String?
+  specialization   String?
+  graduationYear   String?
+  careerGoal       String?
+  linkedin         String?
+  github           String?
+  portfolio        String?
+  skills           String[]  @default([])
+  cvUrl            String?
+  photoUrl         String?
+
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
+  createdAt DateTime @default(now())
+  logs      Log[]
+  savedRoadmaps SavedRoadmap[]
+  savedComparisons SavedComparison[]
+  savedResumes SavedResume[]
+  savedChats   SavedChat[]
+}
+
+model SavedRoadmap {
+  id         String   @id @default(uuid())
+  userId     String
+  careerTitle String
+  roadmapData Json
+  completedSteps Int[] @default([])
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SavedComparison {
+  id         String   @id @default(uuid())
+  userId     String
+  careerTitle String
+  roadmapData Json
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SavedResume {
+  id         String   @id @default(uuid())
+  userId     String
+  careerTitle String
+  roadmapData Json
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SavedChat {
+  id         String   @id @default(uuid())
+  userId     String
+  title      String
+  messages   Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Log {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String
+  ip        String?
+  timestamp DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
