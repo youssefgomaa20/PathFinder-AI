@@ -1,501 +1,239 @@
-# Graduation Project — AI PathFinder
+# AI PathFinder - Full Stack Setup
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-19-61DAFB)](https://react.dev/)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://python.org/)
+This repository now contains:
 
-An AI-powered career guidance platform that helps students and professionals discover personalized learning roadmaps, compare career paths, analyze resumes, and interact with an intelligent career assistant.
+- `frontend/` (existing UI)
+- `backend/` (production-ready Node.js + Express + TypeScript backend)
+- `database/` (PostgreSQL Docker setup)
+- `shared/` (shared folder for future cross-layer contracts)
+- `.env` (root environment variables)
 
----
+## Backend Features
 
-## Overview
+- TypeScript + Express architecture
+- PostgreSQL + Prisma ORM
+- JWT authentication (`/auth/signup`, `/auth/login`)
+- Protected routes (`/user/profile`, `/roadmap/*`, `/compare-careers`, `/resume/analyze`)
+- Real OpenAI integration (no mock data)
+- Zod request validation
+- Rate limiting + Helmet + CORS + centralized error handling
+- Logging table writes for key user actions
 
-**AI PathFinder** is a full-stack graduation project that combines a modern React frontend, a production-ready Node.js API, a Python AI orchestration layer, and PostgreSQL persistence. Users can generate structured career roadmaps, compare two career tracks side-by-side, get AI-powered resume feedback, save their progress, and chat with a universal career assistant.
+## API Endpoints
 
----
+### Required endpoints
+- `POST /auth/signup`
+- `POST /auth/login`
+- `GET /user/profile`
+- `POST /roadmap/generate`
+- `POST /roadmap/save`
+- `GET /roadmap/all`
+- `POST /compare-careers`
+- `POST /resume/analyze`
 
-## Problem Statement
+### Frontend compatibility endpoints
+- `POST /api/pathfinder/career-roadmap`
+- `POST /api/pathfinder/saved-roadmaps`
+- `GET /api/pathfinder/saved-roadmaps`
+- `DELETE /api/pathfinder/saved-roadmaps/:id`
+- `POST /api/pathfinder/compare-careers`
+- `POST /api/pathfinder/resume`
 
-Choosing a career path in technology is overwhelming. Students and early-career professionals often lack:
+## 1) Install dependencies
 
-- Personalized, structured learning plans tailored to their skills and goals
-- Clear comparisons between different career tracks (e.g., Frontend vs. Data Science)
-- Actionable feedback on their resumes and profiles
-- A single platform to explore, save, and track their career journey
+Backend:
 
----
-
-## Solution
-
-AI PathFinder addresses these challenges by providing an integrated platform where users:
-
-1. **Sign up / log in** with email or Google (Firebase Auth)
-2. **Build a profile** with skills, education, and career goals
-3. **Generate AI roadmaps** with staged learning plans, courses, and milestones
-4. **Compare careers** with structured AI analysis
-5. **Analyze resumes** for strengths, gaps, and recommendations
-6. **Save and revisit** roadmaps, comparisons, resumes, and chat sessions
-
-The system uses a **multi-provider AI fallback chain** (OpenAI → Gemini → Groq → Hugging Face) to ensure reliability even when one provider is unavailable.
-
----
-
-## Key Features
-
-| Feature | Description |
-|---------|-------------|
-| **Career Roadmap Generator** | AI-generated staged learning plans with skills, courses, and timelines |
-| **Career Comparison** | Side-by-side analysis of two career tracks |
-| **Resume Analyzer** | AI feedback on skills, experience, and career fit |
-| **Universal Assistant** | Chat-based career guidance on the home page |
-| **Saved Items** | Persist roadmaps, comparisons, resumes, and chat history |
-| **User Profiles** | Skills, education, CV upload, profile photo |
-| **Authentication** | JWT + Google Sign-In, password reset via email |
-| **Multi-language** | English and Arabic support in AI responses |
-
----
-
-## System Architecture
-
-```mermaid
-flowchart TB
-    subgraph Client["Frontend (React + Vite)"]
-        UI[SPA Pages]
-        Firebase[Firebase Auth]
-    end
-
-    subgraph API["Backend (Express + TypeScript)"]
-        Auth[JWT Auth]
-        Routes[REST API]
-        Prisma[Prisma ORM]
-    end
-
-    subgraph AI["AI Service (Python Flask)"]
-        Router[Task Router]
-        Fallback[Provider Fallback Chain]
-        OpenAI[OpenAI]
-        Gemini[Gemini]
-        Groq[Groq]
-        HF[Hugging Face]
-    end
-
-    subgraph DB["Database"]
-        PG[(PostgreSQL)]
-    end
-
-    UI -->|HTTP REST| Routes
-    Firebase -->|Google Token| Auth
-    Routes --> Prisma
-    Prisma --> PG
-    Routes -->|Proxy| Router
-    Router --> Fallback
-    Fallback --> OpenAI
-    Fallback --> Gemini
-    Fallback --> Groq
-    Fallback --> HF
-```
-
----
-
-## Technologies Used
-
-### Frontend
-
-| Technology | Purpose |
-|------------|---------|
-| React 19 + TypeScript | UI framework |
-| Vite 8 | Build tool & dev server |
-| Wouter | Client-side routing |
-| TanStack React Query | Server state management |
-| Zustand | Client state |
-| Tailwind CSS + Radix UI | Styling & accessible components |
-| Framer Motion | Animations |
-| Three.js / React Three Fiber | 3D visual effects |
-| Firebase Auth | Google Sign-In |
-| html2pdf.js | PDF export |
-
-### Backend
-
-| Technology | Purpose |
-|------------|---------|
-| Node.js + Express 5 | HTTP API server |
-| TypeScript | Type safety |
-| Prisma 6 | ORM & migrations |
-| PostgreSQL | Relational database |
-| JWT + bcryptjs | Authentication |
-| Zod | Request validation |
-| Helmet, CORS, rate-limit | Security middleware |
-| Multer | File uploads (CV, profile photo) |
-| Nodemailer | Password reset emails |
-| Axios | AI service proxy |
-
-### AI Module
-
-| Technology | Purpose |
-|------------|---------|
-| Python 3.10+ | Runtime |
-| Flask + flask-cors | HTTP microservice |
-| OpenAI, Gemini, Groq, Hugging Face SDKs | LLM providers |
-| python-dotenv | Environment configuration |
-| Orchestrator pattern | Task routing & provider fallback |
-
-### Database
-
-| Technology | Purpose |
-|------------|---------|
-| PostgreSQL 16 | Primary datastore |
-| Prisma Migrate | Schema migrations |
-| Docker Compose | Local development database |
-| Supabase (optional) | Hosted PostgreSQL in production |
-
----
-
-## Installation
-
-### Prerequisites
-
-- **Node.js** 18+ and npm
-- **Python** 3.10+
-- **Docker Desktop** (for local PostgreSQL)
-- API keys for at least one AI provider (OpenAI, Gemini, Groq, or Hugging Face)
-- Firebase project (for Google Sign-In)
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/youssefgomaa20/Graduation-Project.git
-cd Graduation-Project
-```
-
-### 2. Install dependencies
-
-**Backend:**
 ```bash
 cd backend
 npm install
 ```
 
-**Frontend:**
+Frontend:
+
 ```bash
 cd Frontend/PathFinderAI/pathfinderai
 npm install
 ```
 
-**AI Service:**
-```bash
-cd Ai
-pip install -r requirements.txt
-```
-
-### 3. Configure environment variables
-
-Copy the example files and fill in your values:
-
-```bash
-cp .env.example .env
-cp backend/.env.example backend/.env
-cp Frontend/PathFinderAI/pathfinderai/.env.example Frontend/PathFinderAI/pathfinderai/.env
-```
-
-See [Environment Variables](#environment-variables) for details.
-
-### 4. Start the database
+## 2) Start PostgreSQL
 
 ```bash
 cd database
 docker compose up -d
 ```
 
-Update `DATABASE_URL` in `.env` and `backend/.env`:
-```
-DATABASE_URL=postgresql://aipathfinder:aipathfinder@localhost:5432/aipathfinder
-```
+If Docker is not running, start Docker Desktop first.
 
-### 5. Run database migrations
+## 3) Configure environment
+
+Edit root `.env`:
+
+- `OPENAI_API_KEY` must be a valid OpenAI key
+- `JWT_SECRET` should be a strong random string
+
+For Prisma CLI, backend uses `backend/.env` for `DATABASE_URL`.
+
+## 4) Prisma generate + migrate
 
 ```bash
 cd backend
 npx prisma generate
-npx prisma migrate dev
+npx prisma migrate dev --name init
 ```
 
----
+## 5) Run backend
 
-## Environment Variables
+```bash
+cd backend
+npm run dev
+```
 
-| Variable | Location | Description |
-|----------|----------|-------------|
-| `DATABASE_URL` | Root / Backend | PostgreSQL connection string |
-| `JWT_SECRET` | Backend | Secret key for JWT signing (min 32 chars) |
-| `JWT_EXPIRES_IN` | Backend | Token expiry (e.g., `7d`) |
-| `OPENAI_API_KEY` | Root / Backend | OpenAI API key |
-| `GEMINI_API_KEY` | Root / Backend | Google Gemini API key |
-| `GROQ_API_KEY` | Root / Backend | Groq API key |
-| `HUGGINGFACE_API_KEY` | Root / Backend | Hugging Face API key |
-| `AI_SERVICE_URL` | Backend | Python AI service URL (default: `http://127.0.0.1:5000/ai`) |
-| `FRONTEND_ORIGIN` | Backend | Allowed CORS origins |
-| `VITE_BASE_URL` | Frontend | Backend API URL |
-| `VITE_FIREBASE_*` | Frontend | Firebase config for Google Sign-In |
-| `SMTP_*` | Backend | Email settings for password reset (optional) |
+Backend default URL: `http://localhost:8080`
 
-Full templates are in `.env.example`, `backend/.env.example`, and `Frontend/PathFinderAI/pathfinderai/.env.example`.
+## 6) Connect and run frontend
 
----
+Frontend now calls backend through:
 
-## Running Frontend
+- `VITE_BASE_URL` from root `.env` (default `http://localhost:8080`)
+
+Run frontend:
 
 ```bash
 cd Frontend/PathFinderAI/pathfinderai
 npm run dev
 ```
 
-Open **http://localhost:5173** in your browser.
+## Notes
 
-Build for production:
-```bash
-npm run build
-npm run preview
-```
+- The backend returns real AI-generated roadmap/career/resume data from OpenAI.
+- No mock datasets are used.
+- Compatibility routes are implemented so existing frontend pages work without route rewrites.
 
----
+## Required environment variables
 
-## Running Backend
+In root `.env`:
 
-```bash
-cd backend
-npm run dev
-```
+- `PORT` (default: `8080`)
+- `DATABASE_URL` (PostgreSQL connection)
+- `JWT_SECRET` (minimum 32 chars)
+- `JWT_EXPIRES_IN` (example: `7d`)
+- `OPENAI_API_KEY` (real key required for AI endpoints)
+- `FRONTEND_ORIGIN` (default: `http://localhost:5173`)
+- `VITE_BASE_URL` (default: `http://localhost:8080`)
 
-API available at **http://localhost:8080**.
+## Example API requests
 
-Health check:
-```bash
-curl http://localhost:8080/health
-```
-
-Production:
-```bash
-npm run build
-npm start
-```
-
----
-
-## Running AI Service
+Signup:
 
 ```bash
-cd Ai
-python main.py
-```
-
-AI service runs on **http://localhost:5000**.
-
-Test endpoint:
-```bash
-curl -X POST http://localhost:5000/ai \
+curl -X POST http://localhost:8080/auth/signup \
   -H "Content-Type: application/json" \
-  -d '{"task":"chatbot","input":{"goal":"Frontend Developer","skills":["HTML","CSS"],"language":"en"}}'
+  -d '{"name":"Demo User","email":"demo@example.com","password":"StrongPass123!"}'
 ```
 
----
-
-## Database Setup
-
-### Local (Docker)
+Login:
 
 ```bash
-cd database
-docker compose up -d
+curl -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"demo@example.com","password":"StrongPass123!"}'
 ```
 
-Default credentials:
-- **Database:** `aipathfinder`
-- **User:** `aipathfinder`
-- **Password:** `aipathfinder`
-- **Port:** `5432`
-
-### Migrations
+Generate roadmap (protected):
 
 ```bash
-cd backend
-npx prisma migrate dev      # Development
-npx prisma migrate deploy   # Production
-npx prisma studio           # GUI browser
+curl -X POST http://localhost:8080/roadmap/generate \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"goal":"Become a frontend developer","field":"frontend","skills":["HTML","CSS"],"experience":"beginner","language":"en"}'
 ```
 
-### Schema Models
+Save roadmap (protected):
 
-- `User` — accounts, profiles, skills, CV/photo URLs
-- `SavedRoadmap` — persisted career roadmaps
-- `SavedComparison` — career comparison results
-- `SavedResume` — resume analysis results
-- `SavedChat` — chat session history
-- `Log` — audit trail for user actions
-
----
-
-## API Endpoints
-
-### Health
-| Method | Path | Auth |
-|--------|------|------|
-| GET | `/health` | Public |
-
-### Authentication (`/auth`)
-| Method | Path | Auth |
-|--------|------|------|
-| POST | `/auth/signup` | Public |
-| POST | `/auth/login` | Public |
-| POST | `/auth/google` | Public |
-| POST | `/auth/forgot-password` | Public |
-| POST | `/auth/reset-password` | Public |
-
-### User (`/user`)
-| Method | Path | Auth |
-|--------|------|------|
-| GET | `/user/profile` | JWT |
-| PUT | `/user/profile` | JWT |
-| POST | `/user/upload-cv` | JWT |
-| POST | `/user/upload-image` | JWT |
-| DELETE | `/user/delete-account` | JWT |
-
-### Roadmap (`/roadmap`)
-| Method | Path | Auth |
-|--------|------|------|
-| POST | `/roadmap/generate` | JWT |
-| POST | `/roadmap/save` | JWT |
-| GET | `/roadmap/all` | JWT |
-| POST | `/roadmap/compare-careers` | JWT |
-| POST | `/roadmap/resume/analyze` | JWT |
-
-### PathFinder API (`/api/pathfinder`)
-| Method | Path | Auth |
-|--------|------|------|
-| POST | `/api/pathfinder/career-roadmap` | Optional JWT |
-| POST | `/api/pathfinder/compare-careers` | Optional JWT |
-| POST | `/api/pathfinder/resume` | Optional JWT |
-| POST | `/api/pathfinder/universal-assistant` | Optional JWT |
-| POST | `/api/pathfinder/saved-roadmaps` | JWT |
-| GET | `/api/pathfinder/saved-roadmaps` | JWT |
-| DELETE | `/api/pathfinder/saved-roadmaps/:id` | JWT |
-
-### Home Assistant & Saved Chats
-| Method | Path | Auth |
-|--------|------|------|
-| POST | `/api/home-assistant/chat` | Public |
-| GET/POST/DELETE | `/api/saved-chats/*` | JWT |
-
-### AI Service (Python)
-| Method | Path | Port |
-|--------|------|------|
-| POST | `/ai` | 5000 |
-
----
-
-## Folder Structure
-
-```
-Graduation-Project/
-├── Ai/                          # Python AI microservice
-│   ├── main.py                  # Flask entry point
-│   ├── requirements.txt
-│   ├── orchestrator/            # Task routing & fallback
-│   ├── providers/               # OpenAI, Gemini, Groq, HF
-│   ├── services/                # Roadmap, compare, resume
-│   └── prompts/                 # LLM prompt templates
-│
-├── backend/                     # Node.js API
-│   ├── src/
-│   │   ├── app.ts               # Express app setup
-│   │   ├── server.ts            # Server entry
-│   │   ├── config/              # Environment config
-│   │   ├── routes/              # API route handlers
-│   │   ├── services/            # Business logic
-│   │   ├── middlewares/         # Auth, error handling
-│   │   └── schemas/             # Zod validation
-│   ├── prisma/
-│   │   ├── schema.prisma        # Database schema
-│   │   └── migrations/          # Migration history
-│   └── uploads/                 # User uploads (gitignored)
-│
-├── database/
-│   └── docker-compose.yml       # Local PostgreSQL
-│
-├── Frontend/
-│   └── PathFinderAI/
-│       └── pathfinderai/        # React SPA
-│           ├── src/
-│           │   ├── pages/       # Route pages
-│           │   ├── components/  # UI components
-│           │   ├── layout/      # Header, navigation
-│           │   ├── lib/         # API client, Firebase
-│           │   ├── hooks/       # Custom React hooks
-│           │   └── context/     # React context providers
-│           └── public/
-│
-├── .env.example                 # Root env template
-├── .gitignore
-├── LICENSE
-├── CONTRIBUTING.md
-├── CHANGELOG.md
-└── README.md
+```bash
+curl -X POST http://localhost:8080/roadmap/save \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"goal":"Frontend Developer","field":"frontend","aiResponse":{"careerOverview":"...","learningPlan":[]}}'
 ```
 
----
+Get all roadmaps (protected):
 
-## Screenshots Section
+```bash
+curl -X GET http://localhost:8080/roadmap/all \
+  -H "Authorization: Bearer <JWT_TOKEN>"
+```
 
-> Add screenshots of your application here after deployment.
+Compare careers (protected):
 
-| Page | Description |
-|------|-------------|
-| Home | Landing page with career assistant |
-| Chat | Interactive roadmap generator |
-| Compare | Career track comparison |
-| Resume | AI resume analysis |
-| Profile | User profile management |
-| Saved | Saved roadmaps and sessions |
+```bash
+curl -X POST http://localhost:8080/compare-careers \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"career1":"Frontend Developer","career2":"Data Analyst","language":"en"}'
+```
 
-<!-- 
-![Home Page](docs/screenshots/home.png)
-![Roadmap Results](docs/screenshots/roadmap.png)
-![Career Compare](docs/screenshots/compare.png)
--->
+Resume analyze (protected):
 
----
+```bash
+curl -X POST http://localhost:8080/resume/analyze \
+  -H "Authorization: Bearer <JWT_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Demo User","careerGoal":"Frontend Developer","skills":["React","TypeScript"],"experience":"Built 2 projects","language":"en"}'
+```
+## 📸 Project Screenshots
 
-## Future Improvements
-
-- [ ] Add comprehensive test suite (unit + integration)
-- [ ] Sync Prisma migrations with current schema models
-- [ ] Deploy to cloud (Vercel + Railway/Render + Supabase)
-- [ ] Add CI/CD pipeline with GitHub Actions
-- [ ] Implement real-time chat with WebSockets
-- [ ] Add admin dashboard for usage analytics
-- [ ] Support additional languages beyond EN/AR
-- [ ] Mobile-responsive PWA with offline support
-- [ ] Rate limiting per user tier
-- [ ] OAuth providers beyond Google (GitHub, LinkedIn)
-
----
-
-## Contributors
-
-| Name | Role | GitHub |
-|------|------|--------|
-| **Youssef Gomaa** | Full-stack Developer & Project Lead | [@youssefgomaa20](https://github.com/youssefgomaa20) |
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for how to contribute.
-
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
+### 🏠 Home Page
 
 <p align="center">
-  Built with ❤️ as a Graduation Project
+  <img src="screenshots/home-page.png" width="90%">
 </p>
+
+### 🤖 AI Career Chat
+
+<p align="center">
+  <img src="screenshots/ai-chat.png" width="90%">
+</p>
+
+### ⚖️ Career Comparison
+
+<p align="center">
+  <img src="screenshots/career-comparison.png" width="90%">
+</p>
+
+### 📄 Resume Builder
+
+<p align="center">
+  <img src="screenshots/resume-builder.png" width="90%">
+</p>
+
+### 👤 Profile Dashboard
+
+<p align="center">
+  <img src="screenshots/profile-dashboard.png" width="90%">
+</p>
+
+### 🔐 Login Page
+
+<p align="center">
+  <img src="screenshots/login-page.png" width="90%">
+</p>
+
+### 📝 Sign Up Page
+
+<p align="center">
+  <img src="screenshots/signup-page.png" width="90%">
+</p>
+
+### 🔑 Forgot Password
+
+<p align="center">
+  <img src="screenshots/forgot-password.png" width="90%">
+</p>
+
+### 🔄 Reset Password
+
+<p align="center">
+  <img src="screenshots/reset-password.png" width="90%">
+</p>
+
