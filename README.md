@@ -497,5 +497,5 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 <p align="center">
-  Built with ❤️ as a Graduation Project
+  Built with ❤️ as a Youssef Gomaa
 </p>
