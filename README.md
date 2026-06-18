@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # AI PathFinder - Full Stack Setup
+=======
+# PathFinder-AI
+>>>>>>> c992f73455337aea75a5823e9adc7eaf8ee3ac0c
 
 This repository now contains:
 
@@ -186,8 +190,7 @@ curl -X POST http://localhost:8080/resume/analyze \
 ### 🏠 Home Page
 
 <p align="center">
-  <img src="screenshots/home-page.png" width="90%">
-</p>
+
 
 ### 🤖 AI Career Chat
 
@@ -237,3 +240,9 @@ curl -X POST http://localhost:8080/resume/analyze \
   <img src="screenshots/reset-password.png" width="90%">
 </p>
 
+<<<<<<< HEAD
+  <img src="screenshots/home-page.png" width="90%">
+=======
+  Built with ❤️ as a Youssef Gomaa
+>>>>>>> c992f73455337aea75a5823e9adc7eaf8ee3ac0c
+</p>
