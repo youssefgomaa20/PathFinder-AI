@@ -49,7 +49,6 @@
 - [📸 Screenshots](#screenshots)
 - [🗺️ Future Improvements](#future-improvements)
 - [👥 Contributors](#contributors)
-- [📄 License](#license)
 
 ---
 
@@ -624,12 +623,6 @@ Custom prompt-engineered chatbot loaded with structural career counseling datase
 # Contributors
 
 - **[Youssef Gomaa](https://github.com/youssefgomaa20)** - Creator & Lead Developer
-
----
-
-# License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
